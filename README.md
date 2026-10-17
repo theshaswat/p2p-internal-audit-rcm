@@ -36,7 +36,15 @@ python src/parse_xes.py && python src/run_tests.py && python src/check.py
 python src/build_rcm.py && python src/build_report.py
 ```
 
-`check.py` confirms the parsed log matches the published totals and that every exception table ties to the results.
+`check.py` confirms the parsed log matches the published totals and that every exception table ties to the results. To confirm you hold the same file, run `shasum -a 256 -c data/SHA256SUMS`.
+
+## Tests
+
+```
+pytest -q
+```
+
+`tests/test_sql.py` builds a small purchase-order log with one planted exception per test and asserts each SQL test flags exactly its own case. It runs in CI on every push. It proves the test logic; the full-log result is checked locally by `check.py`.
 
 ## Limits
 

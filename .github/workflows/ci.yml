@@ -1,0 +1,25 @@
+name: tests
+
+# Runs the SQL control tests against a small hand-built purchase-order log in which
+# each test has one planted exception and clean cases beside it, and asserts every
+# test flags exactly its own planted cases. This proves the test logic, not the
+# result on the full BPI Challenge 2019 log: that file is 700 MB, is not redistributed
+# here, and is checked locally by src/check.py against the published totals.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  sql-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt pytest
+      - run: pytest -q

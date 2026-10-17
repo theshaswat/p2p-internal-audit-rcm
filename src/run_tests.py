@@ -7,14 +7,18 @@ P = ROOT / "data" / "processed"
 TESTS = ["T1a", "T1b", "T2", "T3", "T4", "T5"]
 
 
-def connect():
-    c = duckdb.connect()
-    c.execute(f"create table events as select * from '{P}/events.parquet'")
-    c.execute(f"create table cases as select * from '{P}/cases.parquet'")
+def run_sql(c):
     for f in sorted((ROOT / "sql").glob("*.sql")):
         for stmt in f.read_text().split(";\n"):
             if stmt.strip():
                 c.execute(stmt)
+
+
+def connect():
+    c = duckdb.connect()
+    c.execute(f"create table events as select * from '{P}/events.parquet'")
+    c.execute(f"create table cases as select * from '{P}/cases.parquet'")
+    run_sql(c)
     return c
 
 
